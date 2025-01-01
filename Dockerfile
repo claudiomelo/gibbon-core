@@ -19,14 +19,19 @@ RUN apt-get update && apt-get install -y \
 # Instalar o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiar o código do projeto (apenas para instalação inicial)
+# Copiar o código do projeto para dentro do contêiner
 COPY . /var/www/html/
 
-# Instalar dependências do Composer antes de sobrescrever
+# Ajustar permissões da pasta uploads
+RUN mkdir -p /var/www/html/uploads/cache && \
+    chown -R www-data:www-data /var/www/html/uploads && \
+    chmod -R 775 /var/www/html/uploads
+
+# Instalar dependências do Composer
 WORKDIR /var/www/html/
 RUN composer install --no-dev --optimize-autoloader
 
-# Ajustar permissões
+# Ajustar permissões do código
 RUN chown -R www-data:www-data /var/www/html/
 
 # Configurar o PHP
