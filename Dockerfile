@@ -30,12 +30,15 @@ RUN chmod +x /usr/local/bin/init-permissions.sh
 WORKDIR /var/www/html/
 RUN composer install --no-dev --optimize-autoloader
 
+# Ajustar permissões do código
+RUN chown -R www-data:www-data /var/www/html/
+
 # Configurar o PHP
 RUN echo "session.gc_maxlifetime = 3600" >> /usr/local/etc/php/php.ini
 RUN echo "session.cookie_lifetime = 3600" >> /usr/local/etc/php/php.ini
 
-# Usar o script como ponto de entrada
-ENTRYPOINT ["/usr/local/bin/init-permissions.sh"]
+# Executar o script de permissões antes de iniciar o Apache
+CMD ["/bin/bash", "-c", "/usr/local/bin/init-permissions.sh && apache2-foreground"]
 
 # Expor a porta 80
 EXPOSE 80
