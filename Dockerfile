@@ -30,8 +30,9 @@ RUN chmod +x /usr/local/bin/init-permissions.sh
 WORKDIR /var/www/html/
 RUN composer install --no-dev --optimize-autoloader
 
-# Ajustar permissões do código
-RUN chown -R www-data:www-data /var/www/html/
+# Adjust permissions for the Gibbon root directory
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 775 /var/www/html
 
 # Configurar o PHP
 RUN echo "session.gc_maxlifetime = 3600" >> /usr/local/etc/php/php.ini
