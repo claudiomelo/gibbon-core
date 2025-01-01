@@ -19,14 +19,14 @@ RUN apt-get update && apt-get install -y \
 # Instalar o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiar o código do projeto para dentro do contêiner
+# Copiar o código do projeto (apenas para instalação inicial)
 COPY . /var/www/html/
 
-# Instalar dependências do projeto
+# Instalar dependências do Composer antes de sobrescrever
 WORKDIR /var/www/html/
 RUN composer install --no-dev --optimize-autoloader
 
-# Permitir acesso ao diretório
+# Ajustar permissões
 RUN chown -R www-data:www-data /var/www/html/
 
 # Configurar o PHP
