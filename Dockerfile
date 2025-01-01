@@ -19,24 +19,23 @@ RUN apt-get update && apt-get install -y \
 # Instalar o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiar o código do projeto para dentro do contêiner
+# Copiar o código do projeto
 COPY . /var/www/html/
 
-# Ajustar permissões da pasta uploads
-RUN mkdir -p /var/www/html/uploads/cache && \
-    chown -R www-data:www-data /var/www/html/uploads && \
-    chmod -R 775 /var/www/html/uploads
+# Copiar o script de permissões
+COPY init-permissions.sh /usr/local/bin/init-permissions.sh
+RUN chmod +x /usr/local/bin/init-permissions.sh
 
 # Instalar dependências do Composer
 WORKDIR /var/www/html/
 RUN composer install --no-dev --optimize-autoloader
 
-# Ajustar permissões do código
-RUN chown -R www-data:www-data /var/www/html/
-
 # Configurar o PHP
 RUN echo "session.gc_maxlifetime = 3600" >> /usr/local/etc/php/php.ini
 RUN echo "session.cookie_lifetime = 3600" >> /usr/local/etc/php/php.ini
+
+# Usar o script como ponto de entrada
+ENTRYPOINT ["/usr/local/bin/init-permissions.sh"]
 
 # Expor a porta 80
 EXPOSE 80
