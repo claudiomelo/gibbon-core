@@ -8,6 +8,7 @@ services:
     volumes:
       - .:/var/www/html
       - /var/www/html/vendor
+      - gibbon_uploads:/var/www/html/uploads
     networks:
       - gibbon-network
     container_name: gibbon-php
@@ -45,3 +46,4 @@ networks:
 
 volumes:
   mysql_data:
+  gibbon_uploads:
