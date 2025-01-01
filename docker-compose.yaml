@@ -12,7 +12,6 @@ services:
     networks:
       - gibbon-network
     container_name: gibbon-php
-    command: /bin/bash -c "chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html && apache2-foreground"
 
   mysql:
     image: mysql:5.7

@@ -42,7 +42,7 @@ RUN echo "session.cookie_lifetime = 3600" >> /usr/local/etc/php/php.ini
 USER www-data
 
 # Executar o script de permissões antes de iniciar o Apache
-CMD ["/bin/bash", "-c", "/usr/local/bin/init-permissions.sh && apache2-foreground"]
+CMD ["/bin/bash", "-c", "sudo chown -R www-data:www-data /var/www/html && sudo chmod -R 775 /var/www/html && apache2-foreground"]
 
 # Expor a porta 80
 EXPOSE 80
