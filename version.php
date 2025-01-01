@@ -37,7 +37,7 @@ $systemRequirements = [
         ['max_file_uploads', '>=', 20],
         ['allow_url_fopen', '==', 1],
         ['register_globals', '==', 0],
-        ['session.gc_maxlifetime', '>=', 1200],
+        ['session.gc_maxlifetime', '>=', 12000],
         ['post_max_size', '>', 0],
         ['upload_max_filesize', '>', 0],
     ],
