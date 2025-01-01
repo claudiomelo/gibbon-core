@@ -11,21 +11,27 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     gettext \
     unzip \
+    git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd zip pdo pdo_mysql mysqli intl opcache gettext \
     && a2enmod rewrite
 
-# Copiar o código do Gibbon para dentro do contêiner
+# Instalar o Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copiar o código do projeto para dentro do contêiner
 COPY . /var/www/html/
+
+# Instalar dependências do projeto
+WORKDIR /var/www/html/
+RUN composer install --no-dev --optimize-autoloader
 
 # Permitir acesso ao diretório
 RUN chown -R www-data:www-data /var/www/html/
 
+# Configurar o PHP
 RUN echo "session.gc_maxlifetime = 3600" >> /usr/local/etc/php/php.ini
 RUN echo "session.cookie_lifetime = 3600" >> /usr/local/etc/php/php.ini
-
-# Definir o diretório de trabalho
-WORKDIR /var/www/html/
 
 # Expor a porta 80
 EXPOSE 80
